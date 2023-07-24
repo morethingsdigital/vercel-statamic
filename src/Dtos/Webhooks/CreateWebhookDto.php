@@ -1,6 +1,6 @@
 <?php
 
-namespace Morethingsdigital\VercelStatamic\Dtos\Vercel\Webhooks;
+namespace Morethingsdigital\VercelStatamic\Dtos\Webhooks;
 
 use Spatie\LaravelData\Data;
 
