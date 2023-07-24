@@ -1,8 +1,27 @@
 {
     "name": "morethingsdigital/vercel-statamic",
+    "description": "Statamic Addon to manage Vercel deployments inside your Statamic Website",
+    "keywords": [
+        "statamic",
+        "vercel",
+        "devops",
+        "deployment",
+        "next.js"
+    ],
+    "authors": [
+        {
+            "name": "morethingsdigital GmbH"
+        },
+        {
+            "name": "Christoph Stockinger"
+        }
+    ],
+    "support": {
+        "email": "vercel-statamic@morethings.digital"
+    },
     "autoload": {
         "psr-4": {
-            "Morethingsdigital\\VercelStatamic\\": "src"
+            "Morethingsdigital\\VercelStatamic\\": "src/"
         }
     },
     "extra": {
@@ -17,8 +36,12 @@
         }
     },
     "require": {
-        "guzzlehttp/guzzle": "^7.7",
-        "illuminate/http": "^10.13",
-        "spatie/laravel-data": "^3.7"
+        "spatie/laravel-data": "^3.7",
+        "statamic/cms": "^4.12"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
     }
 }
