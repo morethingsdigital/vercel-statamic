@@ -69,7 +69,6 @@ class BaseService
 
     public function post(string $url, array $body = [], array $query = [], array $headers = []): ClientResponse
     {
-        Log::info(array_merge($query, $this->getDefaultUrlParams()));
         return $this->httpService->withHeaders($headers)->withQueryParameters(array_merge($query, $this->getDefaultUrlParams()))->post(url: $url, data: $body);
     }
 
