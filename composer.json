@@ -1,0 +1,24 @@
+{
+    "name": "morethingsdigital/vercel-statamic",
+    "autoload": {
+        "psr-4": {
+            "Morethingsdigital\\VercelStatamic\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Vercel Statamic",
+            "description": "Vercel Statamic addon"
+        },
+        "laravel": {
+            "providers": [
+                "Morethingsdigital\\VercelStatamic\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.7",
+        "illuminate/http": "^10.13",
+        "spatie/laravel-data": "^3.7"
+    }
+}
