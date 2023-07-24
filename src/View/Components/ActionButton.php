@@ -29,6 +29,9 @@ class ActionButton extends Component
         return view('vercel-statamic::components.action-button');
     }
 
+    /**
+     * Generate the HTML-Tag
+     */
     public function tag(): string {
         if($this->href) return 'a';
 
