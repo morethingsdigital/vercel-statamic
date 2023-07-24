@@ -47,8 +47,6 @@ class DeploymentService extends BaseService
 
             $data = $response->json();
 
-            Log::info($data);
-
             $data = $this->mapVercelKeyDifferents($data);
 
             return new VercelDeploymentDto($data['id'], $data['name'], $data['url'], $data['state'], VercelDeploymentCreatorDto::from($data['creator']), VercelDeploymentMetaDto::from($data['meta']));
@@ -113,6 +111,19 @@ class DeploymentService extends BaseService
         } catch (HttpException $exception) {
             throw new HttpException($exception->getStatusCode(), $exception->getMessage());
         }
+    }
+
+    public function latestDeployment(): VercelDeploymentDto
+    {
+        $result = $this->find(projectId: $this->getProjectId(), limit: 1);
+
+        if(count($result->deployments) == 0) throw new HttpException(Response::HTTP_NOT_FOUND, 'no deployments found');
+
+        $latestDeployment =  array_first($result->deployments);
+
+        if (!$latestDeployment) return null;
+
+        return $latestDeployment;
     }
 
     // Mapping for different key names of vercel api und Laravel-Data versteht nur einen Mapping-Key;

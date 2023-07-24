@@ -5,6 +5,10 @@ namespace Morethingsdigital\VercelStatamic;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
+use Morethingsdigital\VercelStatamic\Listeners\CreateDeployment;
+use Statamic\Events\EntryDeleted;
+use Statamic\Events\EntrySaved;
+use Statamic\Events\GlobalSetSaved;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
@@ -25,6 +29,18 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $publishables = [
         __DIR__ . '/../resources/svg' => 'svg',
+    ];
+
+    protected $listen = [
+        EntrySaved::class => [
+            CreateDeployment::class
+        ],
+        EntryDeleted::class => [
+            CreateDeployment::class
+        ],
+        GlobalSetSaved::class => [
+            CreateDeployment::class
+        ]
     ];
 
     protected $viewNamespace = 'vercel-statamic';
