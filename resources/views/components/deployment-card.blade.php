@@ -17,8 +17,8 @@
     <div class="col-span-1">
         <x-vercel-statamic::avatar :id="$creator->id" :name="$creator->name" :email="$creator->email" />
     </div>
-    <div class="col-span-1 flex items-center flex-row flex-nowrap gap-4">
+    <div class="col-span-1 flex items-center justify-end flex-row flex-nowrap gap-4">
         <x-vercel-statamic::action-button :href="$url" target="_blank" icon="expand" label="Serve Url" />
-        <x-vercel-statamic::action-button :href="cp_route('vercel-statamic.deployments.show', ['id' => $id])" icon="chevron-right" label="Show Details" />
+        {{-- <x-vercel-statamic::action-button :href="cp_route('vercel-statamic.deployments.show', ['id' => $id])" icon="chevron-right" label="Show Details" /> --}}
     </div>
 </div>
