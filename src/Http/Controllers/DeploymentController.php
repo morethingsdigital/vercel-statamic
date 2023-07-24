@@ -2,6 +2,7 @@
 
 namespace Morethingsdigital\VercelStatamic\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Morethingsdigital\VercelStatamic\Dtos\Deployments\CreateDeploymentDto;
 use Morethingsdigital\VercelStatamic\Services\DeploymentService;
@@ -16,9 +17,11 @@ class DeploymentController extends Controller
     {
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->deploymentService->find($this->deploymentService->getProjectId());
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $data = $this->deploymentService->find($this->deploymentService->getProjectId(), 10 * $page);
 
         $latestDeployment = $data && $data->deployments ? $data->deployments[0] : null;
 
@@ -32,7 +35,6 @@ class DeploymentController extends Controller
 
     public function redeploy(string $id)
     {
-        Log::info('hallo');
         try {
             if (!$id) throw new HttpException(Response::HTTP_BAD_REQUEST, 'id is required');
 
@@ -42,7 +44,7 @@ class DeploymentController extends Controller
 
             Log::info('deployment abgeholt');
 
-            $createDploymentDto = new CreateDeploymentDto('vercel-test-project', $id);
+            $createDploymentDto = new CreateDeploymentDto($deployment->name, $deployment->id);
 
             Log::info('dto erstellt');
 

@@ -18,6 +18,8 @@
                 </li>
             @endforeach
         </ul>
+
+        <x-vercel-statamic::pagination :currentPage="$pagination->currentPage()" :nextPage="$pagination->nextPage()" />
     @else
         <div>
             <h3>Sorry no current deployments found!</h3>
