@@ -5,7 +5,7 @@ namespace Morethingsdigital\VercelStatamic\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Morethingsdigital\VercelStatamic\Dtos\Deployments\CreateDeploymentDto;
-use Morethingsdigital\VercelStatamic\Services\DeploymentService;
+use Morethingsdigital\VercelStatamic\Services\Vercel\DeploymentService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -20,8 +20,9 @@ class DeploymentController extends Controller
     public function index(Request $request)
     {
         $page = $request->has('page') ? $request->get('page') : 1;
+        $target = $request->has('target') ? $request->get('target') : null;
 
-        $data = $this->deploymentService->find($this->deploymentService->getProjectId(), 10 * $page);
+        $data = $this->deploymentService->find(projectId: $this->deploymentService->getProjectId(), limit: 10 * $page, target: $target);
 
         $latestDeployment = $data && $data->deployments ? $data->deployments[0] : null;
 
@@ -29,6 +30,7 @@ class DeploymentController extends Controller
             'title' =>  $this->generateTitle(['Vercel', 'Deployments']),
             'deployments' => $data->deployments,
             'pagination' => $data->pagination,
+            'target' => $target,
             'latestDeploymentId' => $latestDeployment ? $latestDeployment->id : null
         ]);
     }

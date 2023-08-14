@@ -4,7 +4,7 @@ namespace Morethingsdigital\VercelStatamic\Listeners;
 
 use Illuminate\Support\Facades\Log;
 use Morethingsdigital\VercelStatamic\Dtos\Deployments\CreateDeploymentDto;
-use Morethingsdigital\VercelStatamic\Services\DeploymentService;
+use Morethingsdigital\VercelStatamic\Services\Vercel\DeploymentService;
 use Statamic\Events\EntrySaved;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;

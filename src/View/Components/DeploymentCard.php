@@ -23,6 +23,7 @@ class DeploymentCard extends Component
         public VercelDeploymentCreatorDto $creator,
         public string $branch,
         public string $repo,
+        public string $environment,
     ) {
     }
 

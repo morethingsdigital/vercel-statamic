@@ -9,6 +9,10 @@
         @endif
     </x-slot>
 
-    Hallo Vercel Statamic
+    <section class="container grid grid-cols-6 gap-4 md:grid-cols-12 ">
+        <div class="col-span-full">
+            <x-vercel-statamic::purge-cache-card />
+        </div>
+    </section>
 
 </x-vercel-statamic::app-layout>

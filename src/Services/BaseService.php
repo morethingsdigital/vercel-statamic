@@ -57,7 +57,7 @@ class BaseService
 
     protected function extractErrorMessageFromResponse(ClientResponse $response)
     {
-        return $response->json()['error']['message'];
+        return $response->json() && $response->json()['error'] &&  $response->json()['error']['message'] ? $response->json()['error']['message'] : $response->json();
     }
 
 

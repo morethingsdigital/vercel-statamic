@@ -8,6 +8,7 @@ use Nette\NotImplementedException;
 
 Route::prefix('vercel')->name('vercel-statamic.')->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('index');
+    Route::post('purge', [DashboardController::class, 'purgeCache'])->name('purge');
 
 
     Route::prefix('deployments')->name('deployments.')->group(function () {

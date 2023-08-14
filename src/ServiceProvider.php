@@ -4,11 +4,22 @@ namespace Morethingsdigital\VercelStatamic;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Log;
-use Morethingsdigital\VercelStatamic\Listeners\CreateDeployment;
+use Morethingsdigital\VercelStatamic\Events\PurgeCache;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidateAllTags;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidationTagByEntryCreated;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidationTagByEntrySaved;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidationTagByEntryDeleted;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidationTagByGlobalSetDeleted;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidationTagByGlobalSetSaved;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidationTagByNavDeleted;
+use Morethingsdigital\VercelStatamic\Listeners\RevalidationTagByNavTreeSaved;
+use Statamic\Events\EntryCreated;
 use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
+use Statamic\Events\GlobalSetDeleted;
 use Statamic\Events\GlobalSetSaved;
+use Statamic\Events\NavDeleted;
+use Statamic\Events\NavTreeSaved;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
@@ -32,14 +43,29 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $listen = [
+        EntryCreated::class => [
+            RevalidationTagByEntryCreated::class
+        ],
         EntrySaved::class => [
-            CreateDeployment::class
+            RevalidationTagByEntrySaved::class
         ],
         EntryDeleted::class => [
-            CreateDeployment::class
+            RevalidationTagByEntryDeleted::class
+        ],
+        NavTreeSaved::class => [
+            RevalidationTagByNavTreeSaved::class
+        ],
+        NavDeleted::class => [
+            RevalidationTagByNavDeleted::class
         ],
         GlobalSetSaved::class => [
-            CreateDeployment::class
+            RevalidationTagByGlobalSetSaved::class
+        ],
+        GlobalSetDeleted::class => [
+            RevalidationTagByGlobalSetDeleted::class
+        ],
+        PurgeCache::class => [
+            RevalidateAllTags::class
         ]
     ];
 
@@ -47,15 +73,19 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
-        $this->registerAddonConfig();
-        $this->bootPermissions();
-        $this->bootAddonNav();
-        $this->registerBladeComponents();
+        $this->registerAddonConfig()->bootPermissions()->bootAddonNav()->registerBladeComponents()->bootAddonConfig();
     }
 
     protected function bootAddonNav(): self
     {
         $items = [];
+        $items[] = [
+            'key' => 'Dashboard',
+            'isActive' => Route::current() === 'vercel-statamic.index',
+            'isDisabled' => false,
+            'isPreview' => false,
+            'route' => 'vercel-statamic.index'
+        ];
         $items[] = [
             'key' => 'Deployments',
             'isActive' => Route::current() === 'vercel-statamic.deployments.index',
@@ -66,15 +96,15 @@ class ServiceProvider extends AddonServiceProvider
         $items[] = [
             'key' => 'Aliase',
             'isActive' => Route::currentRouteName() === 'vercel-statamic.aliase.index',
-            'isDisabled' => false,
-            'isPreview' => false,
+            'isDisabled' => true,
+            'isPreview' => true,
             'route' => 'vercel-statamic.aliase.index'
         ];
         $items[] = [
             'key' => 'Envs',
             'isActive' => Route::currentRouteName() === 'vercel-statamic.envs.index',
-            'isDisabled' => false,
-            'isPreview' => false,
+            'isDisabled' => true,
+            'isPreview' => true,
             'route' => 'vercel-statamic.envs.index'
         ];
 
@@ -150,6 +180,20 @@ class ServiceProvider extends AddonServiceProvider
         $this->publishes([
             __DIR__ . '/../config/redirect.php' => config_path('statamic/vercel.php'),
         ], 'statamic-vercel-config');
+
+        return $this;
+    }
+
+    protected function bootAddonConfig()
+    {
+        if ($this->app->runningInConsole()) {
+
+            $this->mergeConfigFrom(__DIR__ . '/../config/vercel.php', 'vercel');
+
+            $this->publishes([
+                __DIR__ . '/../config/vercel.php' => config_path('statamic/vercel.php'),
+            ], 'vercel-config');
+        }
 
         return $this;
     }

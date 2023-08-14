@@ -1,6 +1,6 @@
 <?php
 
-namespace Morethingsdigital\VercelStatamic\Services;
+namespace Morethingsdigital\VercelStatamic\Services\Vercel;
 
 use Illuminate\Support\Facades\Log;
 use Morethingsdigital\VercelStatamic\Dtos\Deployments\CreateDeploymentDto;
@@ -11,6 +11,8 @@ use Morethingsdigital\VercelStatamic\Dtos\Vercel\Deployments\VercelDeploymentDto
 use Morethingsdigital\VercelStatamic\Dtos\Vercel\Deployments\VercelDeploymentMetaDto;
 use Morethingsdigital\VercelStatamic\Dtos\Vercel\Deployments\VercelDeploymentsResult;
 use Morethingsdigital\VercelStatamic\Enums\VercelStates;
+use Morethingsdigital\VercelStatamic\Services\BaseService;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class DeploymentService extends BaseService
@@ -92,7 +94,7 @@ class DeploymentService extends BaseService
 
             $data = $this->mapVercelKeyDifferents($data);
 
-            return new VercelDeploymentDto($data['id'], $data['name'], $data['url'], $data['state'], VercelDeploymentCreatorDto::from($data['creator']), VercelDeploymentMetaDto::from($data['meta']));
+            return new VercelDeploymentDto($data['id'], $data['name'], $data['url'], $data['state'], VercelDeploymentCreatorDto::from($data['creator']), VercelDeploymentMetaDto::from($data['meta']), $data['alias']);
         } catch (HttpException $exception) {
             throw new HttpException($exception->getStatusCode(), $exception->getMessage());
         }
@@ -117,13 +119,49 @@ class DeploymentService extends BaseService
     {
         $result = $this->find(projectId: $this->getProjectId(), limit: 1);
 
-        if(count($result->deployments) == 0) throw new HttpException(Response::HTTP_NOT_FOUND, 'no deployments found');
+        if (count($result->deployments) == 0) throw new HttpException(Response::HTTP_NOT_FOUND, 'no deployments found');
 
         $latestDeployment =  array_first($result->deployments);
 
         if (!$latestDeployment) return null;
 
-        return $latestDeployment;
+        return $this->findOne($latestDeployment->id);
+    }
+
+    public function latestPreviewDeployment(): VercelDeploymentDto
+    {
+        $result = $this->find(projectId: $this->getProjectId(), limit: 1, target: 'preview');
+
+        if (count($result->deployments) == 0) throw new HttpException(Response::HTTP_NOT_FOUND, 'no deployments found');
+
+        $latestDeployment =  array_first($result->deployments);
+
+        if (!$latestDeployment) return null;
+
+        return $this->findOne($latestDeployment->id);
+    }
+
+    public function latestProductionDeployment(): VercelDeploymentDto
+    {
+        $result = $this->find(projectId: $this->getProjectId(), limit: 1, target: 'production');
+
+        if (count($result->deployments) == 0) throw new HttpException(Response::HTTP_NOT_FOUND, 'no deployments found');
+
+        $latestDeployment =  array_first($result->deployments);
+
+        if (!$latestDeployment) return null;
+
+        return $this->findOne($latestDeployment->id);
+    }
+
+    public function latestDeploymentByTarget(string $target): VercelDeploymentDto
+    {
+        switch ($target) {
+            case 'prodcution':
+                return $this->latestProductionDeployment();
+            case 'preview':
+                return $this->latestPreviewDeployment();
+        }
     }
 
     // Mapping for different key names of vercel api und Laravel-Data versteht nur einen Mapping-Key;

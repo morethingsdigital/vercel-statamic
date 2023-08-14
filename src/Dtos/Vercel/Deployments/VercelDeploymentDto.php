@@ -2,6 +2,7 @@
 
 namespace Morethingsdigital\VercelStatamic\Dtos\Vercel\Deployments;
 
+use Illuminate\Support\Facades\Log;
 use Morethingsdigital\VercelStatamic\Enums\VercelStates;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Attributes\MapName;
@@ -10,6 +11,8 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class VercelDeploymentDto extends Data
 {
+
+    public string $environment;
 
     public function __construct(
         #[MapName('uid')]
@@ -24,7 +27,13 @@ class VercelDeploymentDto extends Data
         #[MapName('creator')]
         public VercelDeploymentCreatorDto $creator,
         #[MapName('meta')]
-        public VercelDeploymentMetaDto $meta
+        public VercelDeploymentMetaDto $meta,
+        #[MapName('alias')]
+        public ?array $alias = [],
+        #[MapName('target')]
+        ?string $target = null
     ) {
+        Log::info($target);
+        $this->environment = $target === null ? 'preview' : $target;
     }
 }

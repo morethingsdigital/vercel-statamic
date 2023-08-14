@@ -1,19 +1,20 @@
 <div {{ $attributes->merge(['class' => 'card w-full h-auto relative grid grid-cols-12 gap-4 items-center']) }}>
-    <div class="col-span-7">
+    <div class="col-span-10">
         <h2 class="text-lg text-black font-bold">
             <span>{{ $name }}</span>
 
             <x-vercel-statamic::state-badge :state="$state" class="ml-4" />
+            <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ $environment }}</span>
         </h2>
         <p class="text-sm text-black mt-2">{{ $domain }}</p>
 
     </div>
-    <div class="col-span-3">
+    {{-- <div class="col-span-3"> --}}
         {{-- <div>{{ $repo }}</div>
         <span
             class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ $branch }}</span> --}}
 
-    </div>
+    {{-- </div> --}}
     <div class="col-span-1">
         <x-vercel-statamic::avatar :id="$creator->id" :name="$creator->name" :email="$creator->email" />
     </div>
