@@ -178,22 +178,8 @@ class ServiceProvider extends AddonServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/vercel.php', 'statamic.vercel');
 
         $this->publishes([
-            __DIR__ . '/../config/redirect.php' => config_path('statamic/vercel.php'),
+            __DIR__ . '/../config/vercel.php' => config_path('statamic/vercel.php'),
         ], 'statamic-vercel-config');
-
-        return $this;
-    }
-
-    protected function bootAddonConfig()
-    {
-        if ($this->app->runningInConsole()) {
-
-            $this->mergeConfigFrom(__DIR__ . '/../config/vercel.php', 'vercel');
-
-            $this->publishes([
-                __DIR__ . '/../config/vercel.php' => config_path('statamic/vercel.php'),
-            ], 'vercel-config');
-        }
 
         return $this;
     }
