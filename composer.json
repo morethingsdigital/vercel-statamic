@@ -10,10 +10,14 @@
     ],
     "authors": [
         {
-            "name": "morethingsdigital GmbH"
+            "name": "morethingsdigital GmbH",
+            "email": "hi@morethings.digital",
+            "role": "Maintainer"
         },
         {
-            "name": "Christoph Stockinger"
+            "name": "Christoph Stockinger",
+            "email": "christoph@morethings.digital",
+            "role": "Developer"
         }
     ],
     "support": {
@@ -36,6 +40,7 @@
         }
     },
     "require": {
+        "php": ">=8.2",
         "spatie/laravel-data": "^3.7",
         "statamic/cms": "^4.12"
     },
