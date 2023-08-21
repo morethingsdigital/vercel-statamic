@@ -2,7 +2,6 @@
 
 namespace Morethingsdigital\VercelStatamic\Services\Vercel;
 
-use Illuminate\Support\Facades\Log;
 use Morethingsdigital\VercelStatamic\Dtos\Deployments\CreateDeploymentDto;
 use Morethingsdigital\VercelStatamic\Dtos\Vercel\Common\VercelPaginationDto;
 use Morethingsdigital\VercelStatamic\Dtos\Vercel\Deployments\VercelDeploymentCreatorDto;
@@ -157,7 +156,7 @@ class DeploymentService extends BaseService
     public function latestDeploymentByTarget(string $target): VercelDeploymentDto
     {
         switch ($target) {
-            case 'prodcution':
+            case 'production':
                 return $this->latestProductionDeployment();
             case 'preview':
                 return $this->latestPreviewDeployment();

@@ -64,7 +64,7 @@ class RevalidationService
 
     public function hasCustomTagRevalidation(): bool
     {
-        $customTags = config('statamic.vercel.custom_tag_revalidation');
+        $customTags = $this->getCustomTags();
 
         return isset($customTags) && is_array($customTags);
     }
@@ -76,11 +76,11 @@ class RevalidationService
         if ($this->hasCustomTagRevalidation()) {
             $customTags = $this->getCustomTags();
 
-            if (array_key_exists($this->customKeyNameCollections, $customTags)) throw new HttpException(Response::HTTP_BAD_REQUEST, $this->customKeyNameCollections  . ' is not defined in custom tags revalidation');
+            if (!array_key_exists($this->customKeyNameCollections, $customTags)) throw new HttpException(Response::HTTP_BAD_REQUEST, $this->customKeyNameCollections  . ' is not defined in custom tags revalidation');
 
-            $typeTags = array_values($customTags[$this->customKeyNameCollections]);
+            $typeTags = $customTags[$this->customKeyNameCollections];
 
-            if (array_key_exists($handle, $typeTags))  throw new HttpException(Response::HTTP_BAD_REQUEST, $handle  . ' is not defined in custom tags revalidation of ' . $this->customKeyNameCollections);
+            if (!array_key_exists($handle, $typeTags))  throw new HttpException(Response::HTTP_BAD_REQUEST, $handle  . ' is not defined in custom tags revalidation of ' . $this->customKeyNameCollections);
 
             $handleTags = array_values($typeTags[$handle]);
 
