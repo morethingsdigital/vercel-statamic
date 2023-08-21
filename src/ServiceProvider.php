@@ -73,7 +73,7 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
-        $this->registerAddonConfig()->bootPermissions()->bootAddonNav()->registerBladeComponents()->bootAddonConfig();
+        $this->registerAddonConfig()->bootPermissions()->bootAddonNav()->registerBladeComponents();
     }
 
     protected function bootAddonNav(): self
