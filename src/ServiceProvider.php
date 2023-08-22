@@ -151,14 +151,14 @@ class ServiceProvider extends AddonServiceProvider
         Permission::group('vercel-statamic', 'Vercel', function () {
             Permission::register('view vercel', function ($permission) {
                 $permission
-                    ->label('View Redirects')
+                    ->label('View Vercel')
                     ->children([
-                        Permission::make('edit vercel')
-                            ->label('Edit Vercel')
-                            ->children([
-                                Permission::make('create vercel')->label('Create Vercel'),
-                                Permission::make('delete vercel')->label('Delete Vercel'),
-                            ]),
+                        // Permission::make('edit vercel')
+                        //     ->label('Edit Vercel')
+                        //     ->children([
+                        //         Permission::make('create vercel')->label('Create Vercel'),
+                        //         Permission::make('delete vercel')->label('Delete Vercel'),
+                        //     ]),
                     ]);
             });
         });
