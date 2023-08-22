@@ -1,6 +1,7 @@
 {
     "name": "morethingsdigital/vercel-statamic",
     "description": "Statamic Addon to manage Vercel deployments inside your Statamic Website",
+    "license": "MIT",
     "keywords": [
         "statamic",
         "vercel",
